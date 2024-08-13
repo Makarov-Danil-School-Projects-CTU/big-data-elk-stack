@@ -1,8 +1,6 @@
 Keywords: Elastic search, Kibana, Scala, Data Preprocessing, Open Data
 
-# Elastic Stack
-
-## War in Ukraine/Food prices in Ukraine 
+# War in Ukraine/Food prices in Ukraine 
 
 ![Alt text](./elk/screenshot1.png "Part1")
 ![Alt text](./elk/screenshot2.png "Part2")
