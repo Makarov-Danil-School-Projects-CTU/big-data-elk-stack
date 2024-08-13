@@ -1,3 +1,5 @@
+Keywords: Elastic search, Kibana, Scala, Data Preprocessing, Open Data
+
 # Elastic Stack
 
 ## War in Ukraine/Food prices in Ukraine 
@@ -6,13 +8,13 @@
 ![Alt text](./elk/screenshot2.png "Part2")
 
 
-### Popis datasetu
-Mám několik datasetů: ceny potravin na Ukrajině od roku 2014, záznamy teroristických raketových úderů na Ukrajinu, počet uprchlých běženců do Evropy, ruské ztráty na osobním a technickém složení. 
+### Dataset Description
+I have several datasets: food prices in Ukraine since 2014, records of terrorist rocket attacks on Ukraine, the number of refugees fleeing to Europe, and Russian losses in personnel and equipment.
 
-Datasety ruských ztrát a raketových úderů jsou založeny na zprávách ozbrojených sil Ukrajiny. Dataset s běženci je poskytnut data2.unhcr.org a je založen na otevřených datech Evropské unie. Dataset s cenami potravin je vzat z https://data.humdata.org. Tento dataset obsahuje data o cenách potravin na Ukrajině, pocházející z databáze cen potravin Světového potravinového programu. Databáze cen Světového potravinového programu pokrývá potraviny, jako je kukuřice, rýže, fazole, ryby a cukr pro 98 zemí a asi 3000 trhů.
+The datasets on Russian losses and rocket attacks are based on reports from the Armed Forces of Ukraine. The refugee dataset is provided by data2.unhcr.org and is based on open data from the European Union. The food prices dataset is sourced from https://data.humdata.org. This dataset contains data on food prices in Ukraine, originating from the World Food Programme's food price database. The World Food Programme's price database covers foods such as maize, rice, beans, fish, and sugar for 98 countries and approximately 3,000 markets.
 
 
-### Zdroje
+### Resources
 https://www.kaggle.com/datasets/piterfm/2022-ukraine-russian-war
 
 https://www.kaggle.com/datasets/hskhawaja/russia-ukraine-conflict
@@ -24,11 +26,11 @@ https://data.humdata.org/dataset/ukraine-refugee-situation
 https://data2.unhcr.org/en/situations/ukraine
 
 
-### Formát dat
-Všechny datasety byly záměrně vybrány ve formátu CSV. Všechny mají společný sloupec date, který umožňuje pohodlně provádět join. U všech dokumentů je použit oddělovač ",", což usnadnilo práci s parsováním dat.
+### Data Format
+All datasets were deliberately selected in CSV format. They all share a common date column, which allows for easy joins. A comma (",") delimiter is used in all documents, which facilitated the data parsing process.
 
-### Provedené úpravy dat
-Pro předzpracování dat byl použit Spark, který spouštěl skript v jazyce Scala. Dataset cen potravin obsahoval měsíční data od roku 2014 do roku 2023. Ostatní datasety, které se týkaly války na Ukrajině, měly data téměř za každý den od roku 2022. Abych mohl vytvořit dobrou vizualizaci a zachovat konzistenci dat, rozhodl jsem se spojit všechny CSV soubory kromě cen potravin a omezit data od 28. srpna 2022 do 29. listopadu 2023. Data cen potravin byla omezena od 15. března 2014 do 15. února 2022, což umožňuje sledovat, jaká ekonomická situace byla před masivní invazí. Výstupem skriptu byly dva CSV soubory (food_prices, merged_data), které automaticky přistály ve složce s Logstashem. V Logstash byly definovány dva pipeline, které odesílají data do Elasticsearch. Byly také definovány conf a template soubory. Conf soubory filtrují sloupce, které se dostanou do konečného indexu, automaticky vytvářejí pole "location" ze dvou polí "latitude" a "longitude" a nastavují správné datové typy pro sloupce integer a float. V json template souborech jsou popsána pravidla pro správné mapování dat.
+### Data Modifications
+Spark was used for data preprocessing, running a script written in Scala. The food prices dataset contained monthly data from 2014 to 2023. The other datasets related to the war in Ukraine had data almost daily from 2022. To create a good visualization and maintain data consistency, I decided to merge all the CSV files except for the food prices dataset and limit the data from August 28, 2022, to November 29, 2023. The food prices data were limited to the period from March 15, 2014, to February 15, 2022, which allows tracking the economic situation before the massive invasion. The script outputted two CSV files (food_prices, merged_data), which automatically landed in the Logstash folder. In Logstash, two pipelines were defined to send data to Elasticsearch. Conf and template files were also defined. The conf files filter the columns that make it into the final index, automatically create a "location" field from the "latitude" and "longitude" fields, and set the correct data types for integer and float columns. The json template files describe the rules for proper data mapping.
 
-## Závěr
-Během semestrální práce jsem našel dobré datasety, které se týkají války na Ukrajině a cen potravin. Vytvořil jsem projekt, který může automaticky provádět předzpracování dat a odesílat tato data přímo do Elasticsearch pomocí Logstash. Podarilo se mi vytvořit 8 různých typů vizualizací, které pokrývají všechna data, která jsem měl.
+## Conclusion
+During the semester project, I found good datasets related to the war in Ukraine and food prices. I created a project that can automatically perform data preprocessing and send this data directly to Elasticsearch using Logstash. I successfully created 8 different types of visualizations that cover all the data I had.
