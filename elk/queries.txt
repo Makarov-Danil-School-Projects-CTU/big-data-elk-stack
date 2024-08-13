@@ -1,0 +1,87 @@
+# 1
+
+Vyhledat dokumenty ve dvou indexech, 
+které mají price mezi 10 a 50. Pouzit agregaci pro zjištění počtu unikátních kategorií (category).
+
+GET /food_prices,merged_data/_search
+{
+  "query": {
+    "bool": {
+      "filter": [
+        { "range": { "price": { "gte": 10, "lte": 50 } } }
+      ]
+    }
+  },
+  "aggs": {
+    "unique_categories": {
+      "terms": {
+        "field": "category.keyword",
+        "size": 10
+      }
+    }
+  },
+  "size": 0
+}
+
+# 2
+
+Dotaz najde dokumenty, 
+které leží uvnitř "location" a setřídí 
+je podle DESC date.
+
+GET /food_prices,merged_data/_search
+{
+  "query": {
+    "bool": {
+      "filter": {
+        "geo_distance": {
+          "distance": "250km",
+          "location": {
+            "lat": 50.4501,
+            "lon": 30.5234
+          }
+        }
+      }
+    }
+  },
+  "sort": [
+    { "date": { "order": "desc" } }
+  ],
+  "size": 10
+}
+
+# 3 
+
+Hledá dokumenty s daty od roku 2015 do 2016, pouze ty, které mají typ cen nastavený na "Retail". 
+Zároveň kde je trh označen jako "Kyiv" nebo kde název "commodity" obsahuje slovo "apples". 
+Vyžaduje, aby měna byla "UAH". 
+Výsledky dotazu jsou poté seřazeny sestupně podle "date".
+Agregace vypočítají maximální a minimální hodnotu pole "price". 
+
+
+GET /food_prices,merged_data/_search
+{
+  "query": {
+    "bool": {
+      "must": [
+        { "range": { "date": { "gte": "2015-01-01", "lte": "2016-12-31" } } },
+        { "term": { "pricetype.keyword": "Retail" } }
+      ],
+      "should": [
+        { "match": { "market": "Kyiv" } },
+        { "wildcard": { "commodity.keyword": "*apples" } }
+      ],
+      "minimum_should_match": 1,
+      "filter": [
+        { "term": { "currency.keyword": "UAH" } }
+      ]
+    }
+  },
+  "sort": [
+    { "date": { "order": "desc" } }
+  ],
+  "aggs": {
+    "max_price": { "max": { "field": "price" } },
+    "min_price": { "min": { "field": "price" } }
+  }
+}

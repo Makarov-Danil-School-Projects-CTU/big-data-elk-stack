@@ -1,0 +1,58 @@
+version: '2'
+
+services:
+
+  elasticsearch:
+    image: elasticsearch:7.16.1
+    container_name: elasticsearch
+    restart: always
+    volumes:
+      - ./elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+      - esdata:/usr/share/elasticsearch/data
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    environment:
+      ES_JAVA_OPTS: "-Xmx256m -Xms256m"
+    networks:
+      - elastic
+
+  logstash:
+    image: logstash:7.16.1
+    container_name: logstash
+    volumes:
+      - ./logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml
+      - ./logstash/pipeline:/usr/share/logstash/pipeline
+      - ./logstash/template:/usr/share/logstash/template
+      - ./logstash/data:/usr/share/logstash/data
+    ports:
+      - "5000:5000"
+      - "9600:9600"
+    environment:
+      LS_JAVA_OPTS: "-Xmx256m -Xms256m"
+    networks:
+      - elastic
+    depends_on:
+      - elasticsearch
+
+  kibana:
+    image: kibana:7.16.1
+    container_name: kibana
+    restart: always
+    volumes:
+      - ./kibana/config/kibana.yml:/usr/share/kibana/config/kibana.yml
+      - kibanadata:/usr/share/kibana/data
+    ports:
+      - "5601:5601"
+    networks:
+      - elastic
+    depends_on:
+      - elasticsearch
+
+volumes:
+  esdata:
+  kibanadata:
+
+networks:
+  elastic:
+    driver: bridge

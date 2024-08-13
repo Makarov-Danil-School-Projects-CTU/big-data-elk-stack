@@ -1,0 +1,4 @@
+- pipeline.id: food_prices_pipeline
+  path.config: "/usr/share/logstash/data/pipeline/food_prices.conf"
+- pipeline.id: merged_data_pipeline
+  path.config: "/usr/share/logstash/data/pipeline/merged_data.conf"

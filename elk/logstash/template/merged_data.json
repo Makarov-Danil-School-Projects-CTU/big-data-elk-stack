@@ -1,0 +1,77 @@
+{
+  "index_patterns": ["merged_data*"],
+  "settings": {
+    "number_of_shards": 1,
+    "number_of_replicas": 0
+  },
+  "mappings": {
+    "properties": {
+      "date": {
+        "type": "date",
+        "format": "yyyy-MM-dd"
+      },
+      "model": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "ignore_above": 256
+          }
+        }
+      },
+      "launched": {
+        "type": "integer"
+      },
+      "destroyed": {
+        "type": "integer"
+      },
+      "refugees": {
+        "type": "integer",
+        "ignore_malformed": true
+      },
+      "aircraft": {
+        "type": "integer"
+      },
+      "helicopter": {
+        "type": "integer"
+      },
+      "tank": {
+        "type": "integer"
+      },
+      "APC": {
+        "type": "integer"
+      },
+      "field_artillery": {
+        "type": "integer"
+      },
+      "MRL": {
+        "type": "integer"
+      },
+      "drone": {
+        "type": "integer"
+      },
+      "naval_ship": {
+        "type": "integer"
+      },
+      "anti_aircraft_warfare": {
+        "type": "integer"
+      },
+      "special_equipment": {
+        "type": "integer"
+      },
+      "vehicles_and_fuel_tanks": {
+        "type": "integer"
+      },
+      "cruise_missiles": {
+        "type": "integer"
+      },
+      "submarines": {
+        "type": "integer",
+        "ignore_malformed": true
+      },
+      "personnel": {
+        "type": "integer"
+      }
+    }
+  }
+}
